@@ -1,0 +1,43 @@
+.favourite{
+  min-height: 100vh;
+  width: 100%;
+  padding: 50px 0px 50px 0px ;
+}
+
+.big{
+  padding-left: 15%;
+}
+
+.small{
+  padding-left: 8%;
+}
+
+.favourite-content{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.big .favourite-content{
+  gap: 20px;
+  padding: 5%;
+}
+
+.small .favourite-content{
+  gap: 30px;
+  padding: 5%;
+}
+
+.fav-p{
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+@media only screen and (max-width: 768px) {
+  .fav-p{
+    font-size: 1rem;
+    transform: TranslateY(40vh);
+  }
+}
