@@ -77,77 +77,20 @@
 }
 
 @media only screen and (max-width: 768px) {
-     .feed{
+    .feed   {
+        width: 40%;
         display: flex;
-        align-items: center;
-        justify-content: center;    
-     } 
+        gap: 10px;
+    }
 
-    .film-poster-img {
-        object-fit: cover;
+    .film-poster-img {  
         cursor: pointer;
-        width: 50%;
-    }
-    .film-rate-fav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: -29px;
-        padding: 8px 6px 2px 4px;
-        width: 50%;
-        height: 30px;
-        background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, white 100%);
-        border-bottom: 4px solid white;
-        position: relative;
-        border: none;
-    }
-    
-    .film-rate-fav .film-rate {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 3px;
-        width: fit-content;
-        background-color: #b0f7fa;
-        padding: 2px 3px;
-        border-radius: 20px;
-    }
-    
-    .film-rate-fav .film-rate img {
-        width: 7px;
-        height: 7px;
-        display: inline-block;
-    }
-    
-    .film-rate-fav .film-rate span {
-        font-size: .5em;
-        font-weight: 800;
-        margin-top: 2px;
-    }
-    
-    .film-rate-fav .fav img {
-        width: 10px;
-        height: 10px;
-        cursor: pointer;
-    }
-    
-    .dot {
-        width: 2px;
-        height: 2px;
-        margin: 1px 3px;
-    }
-    
-    .film-name {
-        font-size: .7em;
-        line-height: 1.5em;
+        width: 100%;
     }
 
     .fd-infor{
-        margin-top: -18px;
-    }
-
-    .fdi-item{
-        font-size: .4em;
+        margin-top: -6px;
+        font-size: 12px;
     }
     
 }

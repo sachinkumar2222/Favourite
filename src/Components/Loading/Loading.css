@@ -1,0 +1,33 @@
+.loading{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.loading__container__content{
+    height: 250px;
+    width: 250px;
+    display: flex;
+    align-items: center;
+    justify-self: center; 
+}
+
+.loading__container__content iframe{
+    height: 100%;
+    width: 100%;
+    border: none;
+}
+
+@media only screen and (max-width: 768px) {
+    .loading__container__content{
+        width: 200px;
+        height: 200px;
+    }
+}

@@ -19,13 +19,13 @@
 }
 
 .big .home-content{
-    gap: 30px;
+    gap: 20px;
     padding: 5% 0 5% 5%;
 }
 
 .small .home-content{
-    gap: 30px;
-    padding: 5% 0 5% 5%;
+    gap: 10px;
+    padding: 5% 2% 5% 5%;
 }
 
 .navigation{
@@ -49,16 +49,36 @@
 }
 
 @media only screen and (max-width: 768px) {
+    .home{
+        padding: 70px 0px 50px 0px ;
+    }
+
     .home .big{
-        padding-left: 15%;
+        padding-left: 5%;
     }
     
-    .home.small{
-        padding-left: 15%;
+    .home .small{
+        padding-left: 5%;
+    }
+
+    .big .home-content{
+        column-gap: 30px;
+        row-gap: 15px;
+        padding: 5%;
     }
 
     .small .home-content {
-        gap: 10px;
+        column-gap: 30px;
+        row-gap: 15px;
         padding: 5%;
+    }
+
+    .small .navigation{
+        padding: 30px 20% 0px 20%;
+        
+    }
+    .navigation img{
+        width: 40px;
+        cursor: pointer;
     }
 }

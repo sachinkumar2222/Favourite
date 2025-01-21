@@ -9,6 +9,13 @@ import { Link } from 'react-router-dom';
 function Feed({ item, favourite, toggleFavourite }) {
   const formattedRating = item.vote_average.toFixed(1);
 
+  if(item.title){
+    var type = "Movie";
+  } 
+  else {
+    var type = "TV Show";
+  }
+
   return (
     <div className="feed">
       <div className="feed-content">
@@ -30,11 +37,12 @@ function Feed({ item, favourite, toggleFavourite }) {
         </div>
         <Link to={`/about-movie/${item.id}`}>
           <div className="film-detail">
-            <h3 className="film-name">{item.title}</h3>
+            <h3 className="film-name">{item.title || item.name}</h3>
             <div className="fd-infor">
               <span className="fdi-item">{languageMapping[`${item.original_language}`]}</span>
               <span className="dot"></span>
-              <span className="fdi-item">25m</span>
+              <span className="fdi-item">{type}
+              </span>
             </div>
           </div>
         </Link>

@@ -1,66 +1,55 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'; 
+import React, { useState, useEffect, useContext } from 'react';
 import menu from "../../assets/img/menu.png";
 import user from "../../assets/img/user.png";
 import search from "../../assets/img/search.png";
 import "./Navbar.css";
 import { States } from '../../Store/Store';
 import Suggest from '../Suggestion/suggest';
+import { useLocation } from 'react-router-dom'; 
 
 function Navbar() {
-  const { setSmallSidebar, sData, setShowSuggestions } = useContext(States);
+  const { setSmallSidebar, sData, setShowSuggestions, searchInput, setSearchInput } = useContext(States);
   const [shadow, setShadow] = useState(false);
-  const inputRef = useRef(null); // Reference to the input field
+  const location = useLocation(); 
 
   useEffect(() => {
-    // Handle scroll shadow
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setShadow(true);
-      } else {
-        setShadow(false);
-      }
+      setShadow(window.scrollY > 50);
     };
-
     window.addEventListener('scroll', handleScroll);
 
-    // Cleanup scroll event
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   useEffect(() => {
-    // Click outside handler
-    const handleClickOutside = (event) => {
-      if (inputRef.current && !inputRef.current.contains(event.target)) {
-        setShowSuggestions(false);
-        event.target=""
-      }
-    };
+    setSearchInput('');
+  }, [location.pathname, setSearchInput]); 
 
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [setShowSuggestions]);
+ 
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setShowSuggestions(true); 
+    setSearchInput(value);
+    sData(value); 
+  };
 
   return (
     <>
       <div className={`navbar ps-3 ${shadow ? 'navbar-shadow' : ''}`}>
         <div className="col-2 logo-box">
-          <img src={menu} onClick={() => setSmallSidebar((prev) => !prev)} alt="" />
+          <img src={menu} onClick={() => setSmallSidebar(prev => !prev)} alt=""/>
           <h1>Sachin.</h1>
         </div>
         <div className="col-8 search-box">
           <div className="search">
             <input
-              ref={inputRef} 
               type="text"
-              className='form-control1'
+              className="form-control1"
               placeholder="Search..."
-              onChange={(e) => sData(e.target.value)}
-              onFocus={() => setShowSuggestions(true)} 
+              value={searchInput} 
+              onChange={handleInputChange} 
             />
             <img src={search} alt="" />
           </div>

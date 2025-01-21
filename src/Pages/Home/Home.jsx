@@ -4,17 +4,18 @@ import Feed from '../../Components/Feed/Feed';
 import { States } from '../../Store/Store';
 import next from "../../assets/img/next.png";
 import prev from "../../assets/img/prev.png";
+import Loading from '../../Components/Loading/Loading';
 
 function Home() {
-  const { apiData, smallSidebar, toggleFavourite, favourite, setPage, page } =
-    useContext(States); 
+  const { apiData, smallSidebar, toggleFavourite, favourite, setPage, isLoading } =
+    useContext(States);
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
   };
 
   const decreasePage = () => {
-    setPage((prev) => (prev > 1 ? prev - 1 : 1)); 
+    setPage((prev) => (prev > 1 ? prev - 1 : 1));
     scrollToTop();
   };
 
@@ -28,14 +29,18 @@ function Home() {
       <div className="home">
         <div className={`${smallSidebar ? 'small' : 'big'}`}>
           <div className="home-content">
-            {apiData.map((item) => (
-              <Feed
-                key={item.id}
-                item={item}
-                favourite={favourite[item.id] || false}
-                toggleFavourite={() => toggleFavourite(item.id, item)}
-              />
-            ))}
+            {isLoading ? (
+              <Loading /> 
+            ) : (
+              apiData.map((item) => (
+                <Feed
+                  key={item.id}
+                  item={item}
+                  favourite={favourite[item.id] || false}
+                  toggleFavourite={() => toggleFavourite(item.id, item)}
+                />
+              ))
+            )}
           </div>
           <div className="navigation">
             <div>

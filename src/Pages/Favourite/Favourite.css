@@ -40,4 +40,26 @@
     font-size: 1rem;
     transform: TranslateY(40vh);
   }
+
+  .big{
+    padding-left: 8%;
+  }
+  
+  .small{
+    padding-left: 8%;
+  }
+
+  .big .favourite-content{
+    column-gap: 25px;
+    row-gap: 20px;
+    padding: 5% 0px 5% 5%; 
+    margin: 0px 0px 0px 5%; 
+  }
+
+  .small .favourite-content{
+    column-gap: 25px;
+    row-gap: 20px;
+    padding: 5% 0px 5% 5%; 
+    margin: 0px 0px 0px 5%; 
+  }
 }

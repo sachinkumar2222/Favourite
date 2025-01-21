@@ -10,46 +10,64 @@ const ContextProvider = ({ children }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
-
+  const [searchInput, setSearchInput] = useState("");
 
   const sData = async (searchTerm) => {
     setIsLoading(true);
     try {
-      const data = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=c21b18d183786cd4be5c3a6f768b1d95&query=${searchTerm}&page=${page}`);
-      const res = await data.json();
+      const movieResponse = await fetch(
+        `https://api.themoviedb.org/3/search/movie?api_key=c21b18d183786cd4be5c3a6f768b1d95&query=${searchTerm}&page=${page}`
+      );
+      const movieData = await movieResponse.json();
 
-      if (res.results) {
-        setSearchResults(res.results); 
-        console.log(res.results);
+      const tvResponse = await fetch(
+        `https://api.themoviedb.org/3/search/tv?api_key=c21b18d183786cd4be5c3a6f768b1d95&query=${searchTerm}&page=${page}`
+      );
+      const tvData = await tvResponse.json();
+
+      const combinedResults = [...(movieData.results || []), ...(tvData.results || [])];
+
+      if (combinedResults.length > 0) {
+        setSearchResults(combinedResults); 
       } else {
         setSearchResults([]); 
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+      setSearchResults([]); 
     } finally {
       setIsLoading(false); 
     }
   };
 
-
-
+  // Fetch popular data (Movies, TV shows, Anime) based on page
   const fData = async () => {
     setIsLoading(true);
     try {
-      const data = await fetch(
+      // Popular movies
+      const movieResponse = await fetch(
         `https://api.themoviedb.org/3/movie/popular?api_key=c21b18d183786cd4be5c3a6f768b1d95&page=${page}`
       );
-      const res = await data.json();
+      const movieData = await movieResponse.json();
 
-      if (res.results) {
-        setApiData(res.results);
+      // Popular TV shows (including anime with genre 16)
+      const tvResponse = await fetch(
+        `https://api.themoviedb.org/3/tv/popular?api_key=c21b18d183786cd4be5c3a6f768b1d95&page=${page}`
+      );
+      const tvData = await tvResponse.json();
+
+      const combinedResults = [...(movieData.results || []), ...(tvData.results || [])];
+
+      if (combinedResults.length > 0) {
+        setApiData(combinedResults); // Set both popular movies and TV shows
       } else {
-        setApiData([]);
+        setApiData([]); // Empty results
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+      setApiData([]); // Handle the error by clearing results
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -57,6 +75,7 @@ const ContextProvider = ({ children }) => {
     fData();
   }, [page]);
 
+  // Toggle favorite for movies/TV shows
   const toggleFavourite = (itemId, movieData) => {
     setFavourite((prevFavourites) => {
       const updatedFavourites = { ...prevFavourites };
@@ -84,7 +103,9 @@ const ContextProvider = ({ children }) => {
         toggleFavourite,
         setPage,
         page,
-        sData
+        sData,
+        searchInput,
+        setSearchInput,
       }}
     >
       {children}
