@@ -23,7 +23,7 @@ function Feed({ item, favourite, toggleFavourite }) {
           <Link to={`/about-movie/${item.id}`}><img
             className="film-poster-img"
             alt={item.original_title}
-            src={`https://image.tmdb.org/t/p/w185/${item.poster_path}`}
+            src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
           /></Link>
           <div className="film-rate-fav">
             <div className="film-rate">

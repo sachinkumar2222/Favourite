@@ -72,6 +72,7 @@
 }
 
 .film-poster-img {
+    width: 185px;
     object-fit: cover;
     cursor: pointer;
 }
