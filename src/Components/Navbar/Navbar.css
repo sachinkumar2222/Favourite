@@ -23,8 +23,9 @@
 }
 
 .logo-box img {
-    width: 30px;
+    width: 35px;
     cursor: pointer;
+    margin-left: -25px;
 }
 
 .search-box {
@@ -87,13 +88,9 @@
 }
 
 @media only screen and (max-width: 768px) {
-    .nav {
-        height: 40px;
-        padding-top: 10px;
-    }
-
+   
     .logo-box {
-        padding-left: 20px;
+        padding-left: 30px;
         align-items: center;
         justify-content: center;
         gap: 10px;
@@ -108,8 +105,13 @@
         width: 25px;
     }
 
+    .search-box {
+        padding-left: 20px;
+    }
+
     .search {
-        width: 60%;
+        width: 70%;
+        
     }
 
     .search img {
