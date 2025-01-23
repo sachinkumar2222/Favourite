@@ -5,12 +5,13 @@ import search from "../../assets/img/search.png";
 import "./Navbar.css";
 import { States } from '../../Store/Store';
 import Suggest from '../Suggestion/suggest';
-import { Link, useLocation } from 'react-router-dom'; 
+import { Link, useLocation, useNavigate } from 'react-router-dom'; 
 
 function Navbar() {
   const { setSmallSidebar, sData, setShowSuggestions, searchInput, setSearchInput } = useContext(States);
   const [shadow, setShadow] = useState(false);
-  const location = useLocation(); 
+  const location = useLocation();
+  const navigate = useNavigate(); // Use useNavigate for programmatic navigation
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,12 +28,19 @@ function Navbar() {
     setSearchInput('');
   }, [location.pathname, setSearchInput]); 
 
- 
+  // Handle input change and update suggestions
   const handleInputChange = (e) => {
     const value = e.target.value;
     setShowSuggestions(true); 
     setSearchInput(value);
     sData(value); 
+  };
+
+  // Handle Enter key press event
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && searchInput.trim()) {
+      navigate('/result-movies'); // Navigate to result-movies page when Enter is pressed
+    }
   };
 
   return (
@@ -49,10 +57,11 @@ function Navbar() {
               className="form-control1"
               placeholder="Search..."
               value={searchInput} 
-              onChange={handleInputChange} 
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown} // Listen for Enter key press
             />
             <Link to="/result-movies">
-            <img src={search} alt="" />
+              <img src={search} alt="" />
             </Link>
           </div>
         </div>
