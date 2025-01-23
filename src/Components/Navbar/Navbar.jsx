@@ -4,7 +4,7 @@ import user from "../../assets/img/user.png";
 import search from "../../assets/img/search.png";
 import "./Navbar.css";
 import { States } from '../../Store/Store';
-import Suggest from '../Suggestion/suggest';
+import Suggest from '../Suggestion/Suggest';
 import { Link, useLocation, useNavigate } from 'react-router-dom'; 
 
 function Navbar() {
