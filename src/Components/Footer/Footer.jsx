@@ -2,6 +2,7 @@ import React from 'react';
 import linkedin from "../../assets/img/linkedin.png";
 import about from "../../assets/img/about.png";
 import twitter from "../../assets/img/twitter.png";
+import github from "../../assets/img/github.png";
 import "./Footer.css";
 
 function Footer() {
@@ -13,9 +14,10 @@ function Footer() {
                     <a href="/privacy">Privacy Policy</a>
                 </div>
                 <div className="social-media">
-                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><img src={linkedin} alt="" /></a>
-                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><img src={about} alt="" /></a>
-                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><img src={twitter} alt="" /></a>
+                    <a href="https://www.linkedin.com/in/sparky-sachin-kumar/" target="_blank" rel="noopener noreferrer"><img src={linkedin} alt="" /></a>
+                    <a href="https://github.com/sachinkumar2222" target="_blank" rel="noopener noreferrer"><img src={about} alt="" /></a>
+                    <a href="https://x.com/sparky_sachin" target="_blank" rel="noopener noreferrer"><img src={twitter} alt="" /></a>
+                    <a href="https://github.com/sachinkumar2222" target="_blank" rel="noopener noreferrer"><img src={github} alt="" /></a>
                 </div>
                 <hr />
                 <div className="footer-copyright">
