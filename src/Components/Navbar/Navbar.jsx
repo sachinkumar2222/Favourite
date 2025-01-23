@@ -5,7 +5,7 @@ import search from "../../assets/img/search.png";
 import "./Navbar.css";
 import { States } from '../../Store/Store';
 import Suggest from '../Suggestion/suggest';
-import { useLocation } from 'react-router-dom'; 
+import { Link, useLocation } from 'react-router-dom'; 
 
 function Navbar() {
   const { setSmallSidebar, sData, setShowSuggestions, searchInput, setSearchInput } = useContext(States);
@@ -51,7 +51,9 @@ function Navbar() {
               value={searchInput} 
               onChange={handleInputChange} 
             />
+            <Link to="/result-movies">
             <img src={search} alt="" />
+            </Link>
           </div>
         </div>
         <div className="col-2 login-box">

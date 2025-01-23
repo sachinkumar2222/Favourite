@@ -8,6 +8,7 @@ import Footer from './Components/Footer/Footer.jsx';
 import Sidebar from './Components/Sidebar/Sidebar';
 import ContextProvider from './Store/Store'; 
 import About from './Pages/About/About.jsx';
+import Result from './Pages/Result/Result.jsx';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/favourite-movies' element={<Favourite />} />
         <Route path='/about-movie/:id' element={<About />} />
+        <Route path='/result-movies' element={<Result />} />
       </Routes>
       <Footer />
       </ContextProvider>

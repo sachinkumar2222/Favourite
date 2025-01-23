@@ -1,0 +1,37 @@
+.result{
+    min-height: 100vh;
+    width: 100%;
+    padding: 50px 0px 50px 0px ;
+}
+
+.result .big{
+    padding-left: 10%;
+}
+
+.result .small{
+    padding-left: 5%;
+}
+
+.result-content{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.big .result-content{
+    gap: 20px;
+    padding: 5% 0 5% 5%;
+}
+
+.small .result-content{
+    gap: 10px;
+    padding: 5% 2% 5% 5%;
+}
+
+.no-result p{
+    font-size: 1.5rem;
+    color: black;
+    font-weight: 600;
+    margin-top: 40vh;
+    text-align: center;
+}
