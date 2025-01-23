@@ -183,13 +183,13 @@ function About() {
               <div className="about-info-columnn">
                 <div className="about-info-row-1">
                   <div className='more-info'>
-                    <strong>Status : </strong>
+                    <strong className='status'>Status : </strong>
                     <p>
                       {movieDetails.status} {movieDetails.in_production ? "( Still in Production )" : "( Production has Stopped )"}
                     </p>
                   </div>
                   <div className='more-info'>
-                    <strong>Running time : </strong>
+                    <strong className='run-time'>Running time : </strong>
                     <p>
                       {movieDetails.episode_run_time > 0 ? calTime(movieDetails.episode_run_time) : "Not Revealed"}
                     </p>
@@ -203,7 +203,7 @@ function About() {
                     <p>{movieDetails.number_of_episodes}</p>
                   </div>
                   <div className='more-info'>
-                    <strong>Airing date : </strong>
+                    <strong className='air-date'>Airing date : </strong>
                     <p>{calDate(movieDetails.first_air_date)} - {calDate(movieDetails.last_air_date)}</p>
                   </div>
                   <div className='more-info'>
@@ -211,11 +211,11 @@ function About() {
                     <p>{movieDetails.vote_average.toFixed(1)}/10</p>
                   </div>
                   <div className='more-info'>
-                    <strong>Country : </strong>
+                    <strong className='country'>Country : </strong>
                     <p>{movieDetails.production_countries.map(country => countryCodes[country.iso_3166_1]).join(', ')}</p>
                   </div>
                   <div className='more-info'>
-                    <strong>Spoken languages : </strong>
+                    <strong className='sp-lan'>languages : </strong>
                     <p>{movieDetails.spoken_languages.map(language => language.english_name).join(', ')}</p>
                   </div>
                 </div>

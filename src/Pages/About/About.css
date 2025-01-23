@@ -304,8 +304,29 @@
     .about-info-row-1 .more-info{
         border-radius: 5px;
         margin: 2%;
+        align-items: baseline;
     }
 
+    .about-info-row-1 .more-info .status{
+        width: 82px;
+    }
+
+    .about-info-row-1 .more-info .run-time{
+        width: 120px;
+    }
+
+    .about-info-row-1 .more-info .air-date{
+        width: 115px;
+    }
+
+    .about-info-row-1 .more-info .country{
+        width: 76px;
+    }
+
+    .about-info-row-1 .more-info .sp-lan{
+        width: 97px;
+    }
+     
     .production-company{
         margin-left: 10px;
         border: 1px solid black;
@@ -326,6 +347,8 @@
     }
 
     .player2 {
-        margin: -12% 7% 0px 0px;
+        margin: -14% 7% 0px 0px;
     }
+
+
 }

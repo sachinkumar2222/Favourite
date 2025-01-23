@@ -35,3 +35,30 @@
     margin-top: 40vh;
     text-align: center;
 }
+
+
+@media only screen and (max-width: 768px) {
+    .result{
+        padding: 70px 0px 50px 0px ;
+    }
+
+    .result .big{
+        padding-left: 5%;
+    }
+    
+    .result .small{
+        padding-left: 5%;
+    }
+
+    .big .result-content{
+        column-gap: 30px;
+        row-gap: 15px;
+        padding: 5%;
+    }
+
+    .small .result-content {
+        column-gap: 30px;
+        row-gap: 15px;
+        padding: 5%;
+    }
+}
