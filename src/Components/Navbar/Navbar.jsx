@@ -66,7 +66,7 @@ function Navbar() {
           </div>
         </div>
         <div className="col-2 login-box">
-          <a href='https://sparky-fav.vercel.app/' target='_blank'>About Me</a>
+          <a href='https://sparky-port.vercel.app/' target='_blank'>About Me</a>
           <img src={user} alt="" />
         </div>
       </div>
