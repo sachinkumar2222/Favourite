@@ -22,7 +22,7 @@ function Footer() {
                 <hr />
                 
                 <div className="footer-copyright">
-                    &copy; 2023 Sparky. All rights reserved.
+                    &copy; 2025 Sparky. All rights reserved.
                 </div>
             </div>
         </footer>
