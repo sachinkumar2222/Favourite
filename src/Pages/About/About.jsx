@@ -1,313 +1,273 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom';
 import Loading from '../../Components/Loading/Loading';
 import './About.css';
 import { States } from '../../Store/Store';
 import plus from "../../assets/img/plus.png";
-import check from "../../assets/img/check.png"; // Icon for "Remove Favourite"
+import check from "../../assets/img/check.png";
 import countryCodes, { calDate, calTime, calMoney } from "../../assets/Api/api";
 import play from '../../assets/img/play-button.png';
-import pause from '../../assets/img/pause.png';
+import star from "../../assets/img/star.png";
+import Feed from '../../Components/Feed/Feed';
 
 function About() {
-  const { setShowSuggestions, smallSidebar, favourite, toggleFavourite } = useContext(States);
+  const { setShowSuggestions, setSmallSidebar, favourite, toggleFavourite } = useContext(States);
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const type = searchParams.get('type') || 'movie';
+
   const [movieDetails, setMovieDetails] = useState(null);
   const [showFullOverview, setShowFullOverview] = useState(false);
   const [trailerUrl, setTrailerUrl] = useState('');
   const [showTrailer, setShowTrailer] = useState(false);
-  const [movieCredits, setMovieCredits] = useState(null)
+  const [credits, setCredits] = useState(null);
+  const [recommendations, setRecommendations] = useState([]);
+  const [showInfo, setShowInfo] = useState(false); // Toggle for cast/production
+  const [isFav, setIsFav] = useState(false);
 
-  async function fetchMovieTrailer(movieId) {
-    const url = `https://api.themoviedb.org/3/movie/${movieId}/videos?api_key=c21b18d183786cd4be5c3a6f768b1d95`;
+  // --- API Fetching Functions ---
 
+  async function fetchData(endpoint, setter) {
+    const url = `https://api.themoviedb.org/3/${endpoint}?api_key=c21b18d183786cd4be5c3a6f768b1d95`;
     try {
       const response = await fetch(url);
       const data = await response.json();
+      setter(data);
+    } catch (error) { console.error(error); }
+  }
 
-      if (data.results.length > 0) {
-        // Filter for trailers
-        const trailers = data.results.filter(video => video.type === 'Trailer');
-        if (trailers.length > 0) {
-          const trailerKey = trailers[0].key;
-          const trailerUrl = `https://www.youtube.com/embed/${trailerKey}?autoplay=1&controls=0&modestbranding=1&rel=0&fs=1&showinfo=0&disablekb=1&iv_load_policy=3`;
-          setTrailerUrl(trailerUrl); // Set the trailer URL
-        } else {
-          j
-          console.log('No trailers available.');
-        }
-      } else {
-        console.log('No videos available.');
+  async function fetchTrailer() {
+    const url = `https://api.themoviedb.org/3/${type}/${id}/videos?api_key=c21b18d183786cd4be5c3a6f768b1d95`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const trailer = data.results?.find(vid => vid.type === 'Trailer' && vid.site === 'YouTube');
+      if (trailer) {
+        setTrailerUrl(`https://www.youtube.com/embed/${trailer.key}?autoplay=1&modestbranding=1&rel=0`);
       }
-    } catch (error) {
-      console.error('Error fetching trailer:', error);
-    }
+    } catch (error) { console.error(error); }
   }
 
-  async function fetchMovieCredits(movieId) {
-    const url = `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=c21b18d183786cd4be5c3a6f768b1d95`;
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      setMovieCredits(data.cast)
-    } catch (error) {
-      console.error('Error fetching movie cast:', error);
-    }
-  }
-
-  async function fetchTVCredits(tvId) {
-    const url = `https://api.themoviedb.org/3/tv/${tvId}/credits?api_key=c21b18d183786cd4be5c3a6f768b1d95`;
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      setMovieCredits(data.cast)
-    } catch (error) {
-      console.error('Error fetching TV show cast:', error);
-    }
-  }
+  // --- Effects ---
 
   useEffect(() => {
-    const fetchMovieDetails = async () => {
-      setShowSuggestions(false);
-      try {
-        const tvResponse = await fetch(
-          `https://api.themoviedb.org/3/tv/${id}?api_key=c21b18d183786cd4be5c3a6f768b1d95`
-        );
-        const tvData = await tvResponse.json();
+    // Reset States on ID change
+    setMovieDetails(null);
+    setTrailerUrl('');
+    setShowTrailer(false);
+    setShowFullOverview(false);
+    setShowInfo(false);
 
-        if (tvData.success === false) {
-          const movieResponse = await fetch(
-            `https://api.themoviedb.org/3/movie/${id}?api_key=c21b18d183786cd4be5c3a6f768b1d95`
-          );
-          const movieData = await movieResponse.json();
-          setMovieDetails(movieData);
-          fetchMovieTrailer(id);
-          fetchMovieCredits(id);
-        } else {
-          setMovieDetails(tvData);
-          fetchMovieTrailer(id);
-          fetchTVCredits(id);
-        }
-      } catch (error) {
-        console.error("Error fetching movie or TV show details:", error);
-      }
-    };
+    // UI Helpers
+    window.scrollTo(0, 0);
+    setShowSuggestions(false);
+    setSmallSidebar(true);
 
-    fetchMovieDetails();
-  }, [id, setShowSuggestions]);
+    // Fetch Data
+    fetchData(`${type}/${id}`, setMovieDetails);
+    fetchData(`${type}/${id}/credits`, (data) => setCredits(data));
+    fetchData(`${type}/${id}/similar`, (data) => setRecommendations(data.results));
+    fetchTrailer();
 
-  const handlePlayTrailer = () => {
-    setShowTrailer((pre) => !pre);
-  };
+  }, [id, type]);
 
-  const truncateText = (text, wordLimit) => {
-    const words = text.split(' ');
-    if (words.length > wordLimit) {
-      return words.slice(0, wordLimit).join(' ') + ". . . . .  ";
+  useEffect(() => {
+    // Check if in favourites
+    if (movieDetails) {
+      setIsFav(favourite.some(item => item.id === movieDetails.id));
     }
-    return text;
-  };
+  }, [favourite, movieDetails]);
 
-  const handleReadMore = () => {
-    setShowFullOverview((prev) => !prev);
-  };
+  if (!movieDetails) return <Loading />;
 
-  const isFavourite = favourite[id] !== undefined;
+  // --- Render Helpers ---
+
+  const {
+    title, name, backdrop_path, poster_path, vote_average, release_date, first_air_date,
+    runtime, episode_run_time, genres, overview, tagline, status, revenue, budget
+  } = movieDetails;
+
+  const displayTitle = title || name;
+  const displayDate = release_date || first_air_date;
+  const displayYear = displayDate ? displayDate.substring(0, 4) : '';
+  const displayRuntime = runtime ? calTime(runtime) : (episode_run_time?.[0] ? calTime(episode_run_time[0]) : 'N/A');
+  const rating = vote_average ? vote_average.toFixed(1) : 'NR';
+  const director = credits?.crew?.find(c => c.job === 'Director')?.name || 'Unknown';
+
+  // Determine Genre Text
+  const genreList = genres?.map(g => g.name).slice(0, 3) || [];
 
   return (
-    <div className="about">
-      <div className={smallSidebar ? "small" : "big"}>
-        {movieDetails ? (
-          <div className='about-container'>
-            <div className="about-poster" style={{ backgroundImage: showTrailer ? '' : `url(https://image.tmdb.org/t/p/original/${movieDetails.backdrop_path})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-              {!showTrailer ? (
-                <>
-                  <div className="about-side-dark">
-                    <div className="about-movie">
-                      <img
-                        src={`https://image.tmdb.org/t/p/original/${movieDetails.poster_path}`}
-                        alt={movieDetails.title || movieDetails.name}
-                      />
-                      <div className='genres'>
-                        {movieDetails.genres.map((genre) => (
-                          <p key={genre.id}>{genre.name}</p>
-                        ))}
-                      </div>
-                      <h1 className='title'>{movieDetails.title || movieDetails.name}</h1>
-                      <p className='overview'>
-                        {showFullOverview
-                          ? movieDetails.overview
-                          : truncateText(movieDetails.overview, 25)}
-                        {movieDetails.overview.split(' ').length > 25 && (
-                          <button onClick={handleReadMore} className="read-more-btn">
-                            {showFullOverview ? `Show Less` : ' Show More'}
-                          </button>
-                        )}
-                      </p>
-                      <div className="about-btn">
-                        <div className="fav-link">
-                          <a href={movieDetails.homepage || `https://chatgpt.com`} target='_blank' rel="noopener noreferrer">
-                            <div className="details">Know More</div>
-                          </a>
-                          <div className="add-fav" onClick={() => toggleFavourite(id, movieDetails)} >
-                            <img src={isFavourite ? check : plus} alt={isFavourite ? "Remove Favourite" : "Add Favourite"} />
-                            {isFavourite ? "Remove from Favourite" : "Add to Favourite"}
-                          </div>
-                        </div>
-                        <div className="player1" onClick={handlePlayTrailer}>
-                          <img src={play} alt="" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <iframe
-                    className="trailer-iframe"
-                    width="100%"
-                    height="500"
-                    src={trailerUrl}
-                    title="Movie Trailer"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  >
-                  </iframe>
-                  <div className="player2" onClick={handlePlayTrailer}>
-                    <img src={pause} alt="" />
-                  </div>
-                </>
-              )}
-            </div>
-            {movieDetails.name ? (
-              <div className="about-info-columnn">
-                <div className="about-info-row-1">
-                  <div className='more-info'>
-                    <strong className='status'>Status : </strong>
-                    <p>
-                      {movieDetails.status} {movieDetails.in_production ? "( Still in Production )" : "( Production has Stopped )"}
-                    </p>
-                  </div>
-                  <div className='more-info'>
-                    <strong className='run-time'>Running time : </strong>
-                    <p>
-                      {movieDetails.episode_run_time > 0 ? calTime(movieDetails.episode_run_time) : "Not Revealed"}
-                    </p>
-                  </div>
-                  <div className='more-info'>
-                    <strong>Seasons : </strong>
-                    <p>{movieDetails.number_of_seasons}</p>
-                  </div>
-                  <div className='more-info'>
-                    <strong>Episodes : </strong>
-                    <p>{movieDetails.number_of_episodes}</p>
-                  </div>
-                  <div className='more-info'>
-                    <strong className='air-date'>Airing date : </strong>
-                    <p>{calDate(movieDetails.first_air_date)} - {calDate(movieDetails.last_air_date)}</p>
-                  </div>
-                  <div className='more-info'>
-                    <strong>Rating : </strong>
-                    <p>{movieDetails.vote_average.toFixed(1)}/10</p>
-                  </div>
-                  <div className='more-info'>
-                    <strong className='country'>Country : </strong>
-                    <p>{movieDetails.production_countries.map(country => countryCodes[country.iso_3166_1]).join(', ')}</p>
-                  </div>
-                  <div className='more-info'>
-                    <strong className='sp-lan'>languages : </strong>
-                    <p>{movieDetails.spoken_languages.map(language => language.english_name).join(', ')}</p>
-                  </div>
-                </div>
+    <div className="about-page">
 
-                <div className="about-info-row-2">
-                  <strong>Cast:</strong>
-                  <div className="cast pro-comp">
-                    {movieCredits && movieCredits.map((cast, index) => (
-                      <div key={index} className="creater">
-                        <img src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt={cast.name} />
-                        <div>
-                          <p>{cast.name}</p>
-                          <span>as {cast.character}</span><br />
-                          <span>{cast.known_for_department}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <strong>production Companies:</strong>
-                  <div className="pro-comp">
-                    {movieDetails.production_companies.map((item, index) => (
-                      <div key={index} className="production-company">
-                        <img src={`https://image.tmdb.org/t/p/original/${item.logo_path}`} alt={item.name} />
-                        <p>{item.name}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="about-info-columnn">
-                <div className="about-info-row-1">
-                  <div className='more-info'>
-                    <strong>Status : </strong>
-                    <p>{movieDetails.status}</p>
-                  </div>
-                  <div className='more-info'>
-                    <strong>Running time : </strong>
-                    <p>{calTime(movieDetails.runtime)}</p>
-                  </div>
-                  <div className='more-info'>
-                    <strong>Budget : </strong>
-                    <p>{movieDetails.budget > 0 ? calMoney(movieDetails.budget) : "Not Revealed"}</p>
-                  </div>
-                  <div className='more-info'>
-                    <strong>Revenue : </strong>
-                    <p>{movieDetails.revenue > 0 ? calMoney(movieDetails.revenue) : "Not Revealed"}</p>
-                  </div>
-                  <div className='more-info'>
-                    <strong>Release date : </strong>
-                    <p>{calDate(movieDetails.release_date)}</p>
-                  </div>
-                  <div className='more-info'>
-                    <strong>Rating : </strong>
-                    <p>{movieDetails.vote_average.toFixed(1)}/10</p>
-                  </div>
-                  <div className='more-info'>
-                    <strong>Country : </strong>
-                    <p>{movieDetails.production_countries.map(country => countryCodes[country.iso_3166_1]).join(', ')}</p>
-                  </div>
-                </div>
-                <div className="about-info-row-2">
-                  <strong>Cast:</strong>
-                  <div className="cast pro-comp">
-                    {movieCredits && movieCredits.map((cast, index) => (
-                      <div key={index} className="creater">
-                        <img src={`https://image.tmdb.org/t/p/original/${cast.profile_path}`} alt={cast.name} />
-                        <div>
-                          <p>{cast.name}</p>
-                          <span>as {cast.character}</span><br />
-                          <span>{cast.known_for_department}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <strong>production Companies:</strong>
-                  <div className="pro-comp">
-                    {movieDetails.production_companies.map((item, index) => (
-                      <div key={index} className="production-company">
-                        <img src={`https://image.tmdb.org/t/p/original/${item.logo_path}`} alt={item.name} />
-                        <p>{item.name}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+      {/* Hero Section */}
+      <div className="about-hero">
+        <button className="back-button" onClick={() => navigate('/')}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <div className="hero-backdrop">
+          <img
+            src={`https://image.tmdb.org/t/p/original${backdrop_path || poster_path}`}
+            alt="backdrop"
+          />
+        </div>
+        <div className="hero-overlay"></div>
+      </div>
+
+      {/* Content Wrapper */}
+      <div className="about-content-wrapper">
+
+        {/* Desktop Poster (Hidden on Mobile) */}
+        <div className="desktop-poster-card">
+          <img
+            src={`https://image.tmdb.org/t/p/w780${poster_path}`}
+            alt={displayTitle}
+          />
+        </div>
+
+        {/* Main Details */}
+        <div className="movie-header">
+          <h1 className="movie-title">{displayTitle}</h1>
+          {tagline && <p className="movie-tagline">“{tagline}”</p>}
+
+          {/* Meta Data */}
+          <div className="movie-meta">
+            <div className="meta-item">
+              <img src={star} alt="rating" />
+              <span>{rating}</span>
+            </div>
+            <span>|</span>
+            <span>{displayYear}</span>
+            <span>|</span>
+            <span>{displayRuntime}</span>
+          </div>
+
+          {/* Genres */}
+          <div className="genres-list">
+            {genreList.map((g, i) => (
+              <span key={i} className="genre-pill">{g}</span>
+            ))}
+          </div>
+
+          {/* Overview */}
+          <div className="movie-overview">
+            <p className={showFullOverview ? 'expanded' : ''}>
+              {overview}
+            </p>
+            {overview && overview.length > 150 && (
+              <button
+                className="read-more-btn"
+                onClick={() => setShowFullOverview(!showFullOverview)}
+              >
+                {showFullOverview ? 'Show Less' : 'Read More'}
+              </button>
             )}
           </div>
-        ) : (
-          <Loading />
-        )}
+
+          {/* Action Buttons */}
+          <div className="action-buttons">
+            <button
+              className="btn-glass btn-primary"
+              onClick={() => trailerUrl && setShowTrailer(true)}
+            >
+              <img src={play} alt="play" className="btn-icon" style={{ filter: 'invert(1)' }} />
+              Watch Trailer
+            </button>
+
+            <button
+              className="btn-glass btn-secondary"
+              onClick={() => toggleFavourite(movieDetails.id, movieDetails)}
+            >
+              <img src={isFav ? check : plus} alt="fav" className="btn-icon" />
+              {isFav ? 'Added' : 'Add to List'}
+            </button>
+          </div>
+
+        </div>
       </div>
+
+      {/* Info Sections (Cast, Production) - Below Fold for cleaner look */}
+      <div style={{ padding: '0 20px', maxWidth: '1200px', margin: '0 auto' }}>
+
+        <div className="section-container">
+          <button className="toggle-info-btn" onClick={() => setShowInfo(!showInfo)}>
+            <span>Show Cast & Production Info</span>
+            <span>{showInfo ? '−' : '+'}</span>
+          </button>
+
+          {showInfo && (
+            <div className="expanded-info">
+              <div className="info-grid">
+                <div className="info-item">
+                  <h4>Director</h4>
+                  <span>{director}</span>
+                </div>
+                <div className="info-item">
+                  <h4>Status</h4>
+                  <span>{status}</span>
+                </div>
+                {budget > 0 && (
+                  <div className="info-item">
+                    <h4>Budget</h4>
+                    <span>{calMoney(budget)}</span>
+                  </div>
+                )}
+                {movieDetails.production_countries?.[0] && (
+                  <div className="info-item">
+                    <h4>Country</h4>
+                    <span>{movieDetails.production_countries[0].name}</span>
+                  </div>
+                )}
+              </div>
+
+              <h3 className="section-title" style={{ marginTop: '30px', fontSize: '1.2rem' }}>Top Cast</h3>
+              <div className="genres-list" style={{ justifyContent: 'flex-start' }}>
+                {credits?.cast?.slice(0, 5).map(actor => (
+                  <Link to={`/person/${actor.id}`} key={actor.id} style={{ textDecoration: 'none' }}>
+                    <span className="genre-pill" style={{ background: 'rgba(0,0,0,0.5)' }}>{actor.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Recommendations */}
+        <div className="section-container">
+          <h3 className="section-title">Recommended for you</h3>
+          <div className="recommendations-grid-wrapper">
+            {recommendations.slice(0, 10).map((item) => (
+              <Feed
+                key={item.id}
+                item={item}
+                favourite={favourite.some(f => f.id === item.id)}
+                toggleFavourite={toggleFavourite}
+              />
+            ))}
+          </div>
+        </div>
+
+      </div>
+
+      {/* Trailer Modal */}
+      {showTrailer && (
+        <div className="trailer-modal" onClick={() => setShowTrailer(false)}>
+          <button className="close-modal" onClick={() => setShowTrailer(false)}>×</button>
+          <div className="video-responsive" onClick={e => e.stopPropagation()}>
+            <iframe
+              src={trailerUrl}
+              title="Trailer"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

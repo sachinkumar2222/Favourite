@@ -1,354 +1,462 @@
-.about {
+/* =========================================
+   About Page Rewrite - Mobile First
+   ========================================= */
+
+.about-page {
     width: 100%;
-    padding: 60px 0px 50px 0px;
+    min-height: 100vh;
+    background-color: var(--background);
+    color: var(--text-primary);
+    padding-bottom: 100px;
+    /* Space for Bottom Bar */
+    overflow-x: hidden;
+    /* Prevent horizontal scroll */
 }
 
-.about-container {
-    padding: 2% 6% 0px 5%;
+/* --- Hero Section --- */
+.about-hero {
+    position: relative;
+    width: 100%;
+    height: 75vh;
+    /* Tall hero for mobile */
+    min-height: 500px;
 }
 
-.about-poster {
-    border-radius: 25px;
+.hero-backdrop {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
 }
 
-.trailer-iframe {
-    border-radius: 25px;
-    border: none;
+.hero-backdrop img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
 }
 
-.about-side-dark {
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(18, 18, 18, 0.8) 60%, var(--background) 100%);
+    z-index: 1;
+}
+
+.back-button {
+    position: absolute;
+    top: 90px;
+    /* Below Navbar */
+    left: 20px;
+    z-index: 100;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    /* Darker glass */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
     color: white;
-    border-radius: 25px;
-    padding: 5%;
-    background: linear-gradient(to left, rgba(255, 255, 255, 0) 0%, rgb(0, 0, 0) 80%);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-.about-movie img {
-    width: 150px;
-    border-radius: 10px;
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
 }
 
-.genres {
-    margin: 20px 0px 20px -5px;
+/* --- Content Wrapper --- */
+.about-content-wrapper {
+    position: relative;
+    z-index: 2;
+    padding: 0 20px;
+    width: 100%;
+    /* 
+       CRITICAL: Push content down so it starts clean below the top bar on mobile.
+       The top bar is approx 60-80px. We use a generous padding to frame the "Face" 
+       in the background properly before the text starts.
+    */
+    margin-top: -300px;
+    /* Pull content up into the gradient */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
-.genres p {
-    display: inline-block;
-    color: white;
-    padding: 5px 7px;
-    margin: 0px 5px;
-    border-radius: 25px;
-    background-color: rgba(255, 255, 255, 0.041);
-    backdrop-filter: blur(1000px);
-    width: fit-content;
+/* Mobile: Poster is usually hidden or small in hero, 
+   but here we will focus on the text and let the background be the main visual 
+*/
+
+/* --- Movie Header --- */
+.movie-header {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+    align-items: center;
 }
 
-.about-movie .title {
+.movie-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.1;
     text-transform: uppercase;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+    margin: 0;
+
+    /* Gradient Text */
+    background: linear-gradient(180deg, #FFFFFF 0%, #b0b0b0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.overview {
-    max-width: 60%;
-    transition: all 0.5s ease;
+.movie-tagline {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
 }
 
-.overview .truncated {
+/* Meta Data Row (Rating, Year, etc.) */
+.movie-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    color: #ccc;
+    font-weight: 500;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.meta-item img {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+}
+
+/* Genres */
+.genres-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.genre-pill {
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.85rem;
+    color: #eee;
+}
+
+/* Overview */
+.movie-overview {
+    text-align: center;
+}
+
+.movie-overview p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #ddd;
+    opacity: 0.9;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    /* Limit lines initially */
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
+    transition: all 0.3s;
 }
 
-.overview .full {
-    display: block;
-    width: 60%;
-    transition-duration: .5s;
+.movie-overview p.expanded {
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
 }
 
 .read-more-btn {
-    background-color: transparent;
-    color: #fff;
+    background: none;
     border: none;
-    font-size: 16px;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: 5px;
     cursor: pointer;
-    text-decoration: underline;
+    padding: 0;
 }
 
-.read-more-btn:hover {
-    color: #ccc;
-}
-
-.about-btn {
+/* Actions Buttons */
+.action-buttons {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: -30px;
+    gap: 15px;
+    justify-content: center;
+    width: 100%;
 }
 
-.about-btn .player1 img {
-    width: 100px;
-    cursor: pointer;
-}
-
-.player2 {
-    position: absolute;
-    right: 0;
-    margin: -9% 9% 0px 0px;
-}
-
-.player2 img {
-    width: 100px;
-    cursor: pointer;
-}
-
-.fav-link {
+.btn-glass {
+    flex: 1;
+    max-width: 160px;
+    height: 45px;
     display: flex;
     align-items: center;
-    justify-content: start;
-    gap: 20px;
-    margin: 30px 0 0 0;
-}
-
-.fav-link .details {
-    padding: 5px 7px;
-    color: black;
-    border-radius: 25px;
-    background-color: white;
-    width: fit-content;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
     cursor: pointer;
-    font-size: medium;
-    font-weight: 700;
-}
-
-.fav-link a {
+    transition: all 0.3s ease;
     text-decoration: none;
 }
 
-.fav-link .details:hover {
-    background-color: rgb(204, 203, 203);
+.btn-primary {
+    background: white;
+    color: black;
+    border: none;
 }
 
-.fav-link .add-fav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    padding: 5px 7px;
+.btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
-    border-radius: 25px;
-    width: fit-content;
-    cursor: pointer;
-    font-size: medium;
+    backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+}
+
+.btn-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* --- Sections (Cast, Info, Recs) --- */
+.section-container {
+    margin-top: 40px;
+    width: 100%;
+}
+
+.section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    border-left: 4px solid var(--primary);
+}
+
+/* Toggle Info Area */
+.toggle-info-btn {
+    width: 100%;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
     font-weight: 500;
-    border: 1px solid white;
-    position: relative;
-}
-
-.rem-fav-icon {
-    display: none;
-}
-
-
-.fav-link .add-fav img {
-    width: 20px;
-}
-
-.fav-link .add-fav:hover {
-    background-color: rgba(255, 255, 255, 0.075);
-    backdrop-filter: blur(1000px);
-}
-
-.add-fav-icon {
-    content: '';
-    background-image: url("../../assets/img/check.png");
-}
-
-
-.pro-comp {
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 3% 2%;
-}
-
-.pro-comp .creater{
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 10px;
-    padding: 5px 7px;
-    border: 1px solid black;
-    border-radius: 5px;
-    box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.5);
-}
-
-.pro-comp .creater img{
-     width: 70px;
-     border-radius: 5px;
-}
-
-.pro-comp .creater p{
-     font-size: medium;
-     font-weight: 700;
-     margin: 13px 0px -3px 0px;
-}
-
-.pro-comp strong {
-    font-size: medium;
-}
-
-.production-company {
-    text-align: center;
-    border: 2px solid black;
-    width: fit-content;
-    padding: 5px 7px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.5);
-}
-
-.production-company p {
-    font-size: medium;
-    font-weight: 600;
-    padding-top: 10px;
-    margin-bottom: 0px;
-}
-
-.production-company img {
-    width: 100px;
-    object-fit: cover;
     cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.about-info-row-1{
-    padding: 2% 0px;
-    margin-top: 2%;
-    border: 2px solid black;
-    border-radius: 25px;
+.expanded-info {
+    margin-top: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    padding: 20px;
 }
 
-.about-info-row-1 .more-info {
-    border: 1px solid silver;
-    margin: 1%;
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.info-item h4 {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 4px;
+}
+
+.info-item span {
+    font-size: 1rem;
+    color: white;
+    font-weight: 500;
+}
+
+/* Recommendations Grid - Perfectly Synced with Home */
+.recommendations-grid-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    width: 100%;
+}
+
+/* --- Trailer Modal --- */
+.trailer-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
     display: flex;
     align-items: center;
-    justify-content: start;
-    padding: 0px 7px;
-    gap: 10px;
+    justify-content: center;
+    padding: 20px;
 }
 
-.more-info strong {
-    font-size: medium;
+.video-responsive {
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 16/9;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
 }
 
-.more-info p {
-    font-size: medium;
-    padding-top: 17px;
+.video-responsive iframe {
+    width: 100%;
+    height: 100%;
 }
 
-.about-info-row-2{
-    padding: 2% 0px;
-    margin-top: 2%;
-    border: 2px solid black;
-    border-radius: 25px;
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.about-info-row-2 strong {
-    font-size: 25px;
-    padding-left: 2%;
-}
-
-
-@media only screen and (max-width: 768px) {
-
-    .fav-link .details {
-        font-size: 14px;
-        width: 94px;
+/* --- Desktop Enhancements --- */
+@media only screen and (min-width: 1024px) {
+    .about-page {
+        padding-left: 100px;
+        /* Sidebar space */
     }
 
-    .fav-link .add-fav {
-        font-size: 14px;
-        width: 165px;
+    .back-button {
+        left: 120px;
+        /* Clear the Sidebar on Desktop */
     }
 
-    .about-btn .player1 {
-        position: absolute;
-        right: 0;
-        margin: -22% 7% 0px 0px;
+    .about-hero {
+        height: 85vh;
     }
 
-    .about-btn .player1 img {
-        width: 80px;
+    .hero-backdrop img {
+        /* On desktop we can show more of the image */
+        object-position: center 20%;
     }
 
-    .overview{
-        font-size: 13px;
+    .hero-overlay {
+        /* Horizontal gradient for desktop */
+        background: linear-gradient(to right, rgba(18, 18, 18, 1) 0%, rgba(18, 18, 18, 0.8) 40%, rgba(18, 18, 18, 0.2) 100%),
+            linear-gradient(to top, var(--background) 0%, transparent 50%);
     }
 
-    .read-more-btn{
-        font-size: 13px;
+    .about-content-wrapper {
+        margin-top: -50vh;
+        /* Move up to overlay nicely */
+        padding: 0 60px;
+        flex-direction: row;
+        align-items: flex-end;
+        gap: 50px;
     }
 
-    .genres {
-        margin: 16px 0px 10px -5px;
-    }
-     
-    .genres p{
-        margin: 3px 3px;
-    }
-
-    .about-info-row-1 {
-        padding: 4% 7px;
-        margin-top: 4%;
-    }
-
-    .about-info-row-1 .more-info{
-        border-radius: 5px;
-        margin: 2%;
-        align-items: baseline;
+    /* Add a standalone poster for Desktop */
+    .desktop-poster-card {
+        display: block;
+        /* Visible on desktop */
+        min-width: 300px;
+        width: 300px;
+        height: 450px;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 10;
+        background: #222;
     }
 
-    .about-info-row-1 .more-info .status{
-        width: 82px;
-    }
-
-    .about-info-row-1 .more-info .run-time{
-        width: 120px;
-    }
-
-    .about-info-row-1 .more-info .air-date{
-        width: 115px;
-    }
-
-    .about-info-row-1 .more-info .country{
-        width: 76px;
-    }
-
-    .about-info-row-1 .more-info .sp-lan{
-        width: 97px;
-    }
-     
-    .production-company{
-        margin-left: 10px;
-        border: 1px solid black;
-        box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.5);
-    }
-
-    .pro-comp .creater{
+    .desktop-poster-card img {
         width: 100%;
-        column-gap: 30px;
+        height: 100%;
+        object-fit: cover;
     }
 
-    .pro-comp .creater img{
-        width: 50px;
+    .movie-header {
+        align-items: flex-start;
+        text-align: left;
+        flex: 1;
+        margin-bottom: 20px;
     }
 
-    .pro-comp .creater p{
-        margin: 0px 0px -3px 0px;
+    .movie-title {
+        font-size: 4rem;
     }
 
-    .player2 {
-        margin: -14% 7% 0px 0px;
+    .genres-list,
+    .movie-meta,
+    .action-buttons {
+        justify-content: flex-start;
     }
 
+    .movie-overview {
+        text-align: left;
+        max-width: 800px;
+    }
 
+    .info-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media only screen and (max-width: 1023px) {
+    .desktop-poster-card {
+        display: none;
+        /* Hide standard poster on mobile, use background */
+    }
 }

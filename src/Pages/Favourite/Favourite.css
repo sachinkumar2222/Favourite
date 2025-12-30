@@ -1,65 +1,72 @@
-.favourite{
+/* Base Layout (Mobile First) */
+.favourite-page {
+  width: 100%;
   min-height: 100vh;
+  background-color: #0b0b0b;
+  padding-top: calc(var(--nav-height) + 40px);
+  /* Space for fixed navbar */
+  padding-bottom: 100px;
+  /* Space for mobile bottom bar */
+  padding-left: 20px;
+  padding-right: 20px;
+  color: white;
+}
+
+.favourite-container {
+  max-width: 1600px;
+  margin: 0 auto;
   width: 100%;
-  padding: 50px 0px 50px 0px ;
 }
 
-.big{
-  padding-left: 15%;
+/* Page Title */
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  padding-left: 10px;
+  border-left: 5px solid var(--primary);
+  color: white;
 }
 
-.small{
-  padding-left: 8%;
+/* Grid Layout - Synced with Home & About */
+.favourite-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+  width: 100%;
 }
 
-.favourite-content{
+/* Empty State */
+.empty-state {
   display: flex;
-  flex-wrap: wrap;
-}
-
-.big .favourite-content{
-  gap: 20px;
-  padding: 5%;
-}
-
-.small .favourite-content{
-  gap: 30px;
-  padding: 5%;
-}
-
-.fav-p{
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
   text-align: center;
-  width: 100%;
+  color: #777;
 }
 
-@media only screen and (max-width: 768px) {
-  .fav-p{
-    font-size: 1rem;
-    transform: TranslateY(40vh);
+.empty-state h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #ddd;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  max-width: 300px;
+}
+
+/* --- Desktop Enhancements --- */
+@media only screen and (min-width: 768px) {
+  .favourite-page {
+    padding-left: 120px;
+    /* Space for Sidebar */
+    padding-right: 40px;
   }
 
-  .big{
-    padding-left: 8%;
-  }
-  
-  .small{
-    padding-left: 8%;
-  }
-
-  .big .favourite-content{
-    column-gap: 25px;
-    row-gap: 20px;
-    padding: 5% 0px 5% 5%; 
-    margin: 0px 0px 0px 5%; 
-  }
-
-  .small .favourite-content{
-    column-gap: 25px;
-    row-gap: 20px;
-    padding: 5% 0px 5% 5%; 
-    margin: 0px 0px 0px 5%; 
+  .page-title {
+    font-size: 2.5rem;
   }
 }

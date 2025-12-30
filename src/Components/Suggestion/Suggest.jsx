@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 function Suggest() {
   const { showSuggestions, searchResults } = useContext(States);
-  const [activeIndex, setActiveIndex] = useState(-1); 
-  const navigate = useNavigate(); 
-  const suggestionRefs = useRef([]); 
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const navigate = useNavigate();
+  const suggestionRefs = useRef([]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -22,7 +22,9 @@ function Suggest() {
           prevIndex > 0 ? prevIndex - 1 : searchResults.length - 1
         );
       } else if (e.key === "Enter" && activeIndex >= 0) {
-        navigate(`/about-movie/${searchResults[activeIndex].id}`);
+        const item = searchResults[activeIndex];
+        const type = item.media_type || (item.title ? 'movie' : 'tv');
+        navigate(`/about-movie/${item.id}?type=${type}`);
       }
     };
 
@@ -49,9 +51,12 @@ function Suggest() {
           {searchResults.map((item, index) => (
             <li
               key={index}
-              ref={(el) => (suggestionRefs.current[index] = el)} 
+              ref={(el) => (suggestionRefs.current[index] = el)}
               className={`suggest-item ${index === activeIndex ? "active" : ""}`}
-              onClick={() => navigate(`/about-movie/${item.id}`)}
+              onClick={() => {
+                const type = item.media_type || (item.title ? 'movie' : 'tv');
+                navigate(`/about-movie/${item.id}?type=${type}`);
+              }}
             >
               <img
                 src={`https://image.tmdb.org/t/p/w185/${item.poster_path}`}

@@ -5,13 +5,32 @@ import search from "../../assets/img/search.png";
 import "./Navbar.css";
 import { States } from '../../Store/Store';
 import Suggest from '../Suggestion/Suggest';
-import { Link, useLocation, useNavigate } from 'react-router-dom'; 
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const { setSmallSidebar, sData, setShowSuggestions, searchInput, setSearchInput } = useContext(States);
   const [shadow, setShadow] = useState(false);
   const location = useLocation();
   const navigate = useNavigate(); // Use useNavigate for programmatic navigation
+  const searchRef = React.useRef(null); // Ref for search bar
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // If click is outside search bar AND outside suggestion box
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target) &&
+        !event.target.closest('.suggest')
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setShowSuggestions]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,37 +45,48 @@ function Navbar() {
 
   useEffect(() => {
     setSearchInput('');
-  }, [location.pathname, setSearchInput]); 
+  }, [location.pathname, setSearchInput]);
 
-  // Handle input change and update suggestions
+  // Debouncing Logic
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchInput.trim()) {
+        sData(searchInput);
+      }
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchInput]);
+
+  // Handle input change
   const handleInputChange = (e) => {
-    const value = e.target.value;
-    setShowSuggestions(true); 
-    setSearchInput(value);
-    sData(value); 
+    setSearchInput(e.target.value);
+    setShowSuggestions(true);
   };
 
   // Handle Enter key press event
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && searchInput.trim()) {
-      navigate('/result-movies'); // Navigate to result-movies page when Enter is pressed
+      navigate('/result-movies');
+      setShowSuggestions(false); // Hide suggestions on enter
     }
   };
+
 
   return (
     <>
       <div className={`navbar ps-3 ${shadow ? 'navbar-shadow' : ''}`}>
-        <div className="col-2 logo-box">
-          <img src={menu} onClick={() => setSmallSidebar(prev => !prev)} alt=""/>
+        <div className="logo-box">
+          <img src={menu} onClick={() => setSmallSidebar(prev => !prev)} alt="" />
           <h1>Sachin.</h1>
         </div>
-        <div className="col-8 search-box">
-          <div className="search">
+        <div className="search-box">
+          <div className="search" ref={searchRef}>
             <input
               type="text"
               className="form-control1"
               placeholder="Search..."
-              value={searchInput} 
+              value={searchInput}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown} // Listen for Enter key press
             />
@@ -65,7 +95,7 @@ function Navbar() {
             </Link>
           </div>
         </div>
-        <div className="col-2 login-box">
+        <div className="login-box">
           <a href='https://sparky-port.vercel.app/' target='_blank'>About Me</a>
           <img src={user} alt="" />
         </div>

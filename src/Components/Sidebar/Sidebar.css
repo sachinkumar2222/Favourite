@@ -1,93 +1,243 @@
+/* Sidebar Container */
 .sidebar {
-    height: 100%;
-    width: 15%;
     position: fixed;
     top: 0;
     left: 0;
-    background-color: white;
-    overflow-x: hidden;
-    padding: 65px 0 0 23px;
-    transition: 0.5s;
-    border-right: 1px solid #575757;
-    box-shadow: 3px 0 3px rgba(0, 0, 0, .1);
-    z-index: 100;
-}
-
-.sidebar-menu {
-    list-style-type: none;
-    padding: 0;
-}
-
-.sidebar-menu li {
-    padding: 0px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    gap: 10px;
-}
-
-.sidebar-menu a {
-    color: black;
-    text-decoration: none;
-    display: block;
-    transition: 0.3s;
-}
-
-.sidebar-menu li img {
-    width: 30px;
-    height: 30px;
-    transition: 0.3s;
-}
-
-.sidebar-menu li p{
-    font-size: 16px;
-    font-weight: 500;
-    margin-top: 19px;
-}
-
-.sidebar-menu li p:hover {
-  color: rgb(67, 9, 102) ;
+    height: 100vh;
+    padding-top: calc(var(--nav-height) + 40px);
+    /* More spacing from top */
+    padding-left: 0;
+    width: 250px;
+    /* Comfortable width */
+    background: transparent;
+    /* Seamless blend */
+    transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    z-index: 900;
+    /* Optional: very subtle divider if needed, or remove for total minimal */
+    /* border-right: 1px solid rgba(255, 255, 255, 0.03); */
 }
 
 .small-sidebar {
-    width: 8%;
-    padding: 65px 0 0 23px;
+    width: 90px;
 }
 
-.small-sidebar li{
-    padding: 13px 16px;
+/* Menu List */
+.sidebar-menu {
+    list-style-type: none;
+    padding: 0 15px;
+    /* Horizontal padding for the links */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* Space between items */
 }
 
-.small-sidebar .sidebar-menu li p {
+/* Links */
+.sidebar-menu a {
+    text-decoration: none;
+    display: block;
+    color: var(--text-secondary);
+}
+
+/* Items */
+.sidebar-menu li {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    border-radius: 16px;
+    /* Smooth rounded corners */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Icons */
+.sidebar-menu svg {
+    width: 28px;
+    height: 28px;
+    margin-right: 20px;
+    color: rgba(255, 255, 255, 0.5);
+    /* Inactive color */
+    transition: all 0.3s ease;
+}
+
+/* Text */
+.sidebar-menu p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* --- Hover State --- */
+.sidebar-menu li:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Very subtle hover */
+}
+
+.sidebar-menu li:hover svg {
+    color: white;
+    transform: scale(1.1);
+}
+
+.sidebar-menu li:hover p {
+    color: white;
+    transform: translateX(5px);
+    /* Subtle slide */
+}
+
+/* --- Active State (Simulated) --- */
+/* You should add a class 'active' to the Link or li based on current route */
+.sidebar-menu a.active li {
+    background: linear-gradient(90deg, rgba(187, 134, 252, 0.15) 0%, rgba(187, 134, 252, 0) 100%);
+    /* Purple fade */
+    color: var(--primary);
+}
+
+.sidebar-menu a.active li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 50%;
+    background-color: var(--primary);
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 10px var(--primary);
+}
+
+.sidebar-menu a.active svg {
+    filter: drop-shadow(0 0 8px rgba(187, 134, 252, 0.4));
+    transform: scale(1.1);
+}
+
+.sidebar-menu a.active p {
+    color: white;
+    font-weight: 600;
+}
+
+
+/* --- Collapsed State --- */
+.small-sidebar .sidebar-menu p {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.small-sidebar .sidebar-menu svg {
+    margin-right: 0;
+}
+
+.small-sidebar .sidebar-menu li {
+    justify-content: center;
+    padding: 15px;
+    border-radius: 50%;
+    /* Circle shape when small? or Square */
+    border-radius: 12px;
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+    /* Center in sidebar */
+}
+
+.small-sidebar .sidebar-menu a.active li::before {
+    /* Hide the left bar in collapsed mode, or make it a dot */
     display: none;
 }
 
+.small-sidebar .sidebar-menu a.active li {
+    background: rgba(187, 134, 252, 0.2);
+    /* Solid subtle block */
+}
+
+
+/* Mobile - Bottom Bar Transformation */
 @media only screen and (max-width: 768px) {
     .sidebar {
-        width: 35%;
-        padding: 65px 0 0 0px;
+        position: fixed;
+        bottom: 20px;
+        /* Floating above bottom */
+        top: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        /* Center horizontally */
+        width: 90%;
+        /* Not full width */
+        max-width: 400px;
+        /* Limit width on larger mobiles */
+        height: 65px;
+        padding: 0 20px;
+        background: rgba(20, 20, 20, 0.85);
+        /* Slightly transparent dark */
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50px;
+        /* Pill shape */
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        /* Deep shadow for float effect */
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .sidebar-menu {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        /* Spread icons evenly */
+        padding: 0 10px;
+        gap: 0;
+        margin: 0;
+        height: 100%;
+        align-items: center;
+    }
+
+    .sidebar-menu a {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
     }
 
     .sidebar-menu li {
-        padding: 0px 16px;
-
+        flex-direction: column;
+        justify-content: center;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        background: transparent !important;
     }
 
-    .sidebar-menu li a {
-        text-align: center;
+    .sidebar-menu svg {
+        margin: 0;
+        width: 28px;
+        /* Larger icons */
+        height: 28px;
+        color: rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
     }
 
-    .small-sidebar {
-        width: 10%;
+    .sidebar-menu p {
+        display: none;
+        /* Hide text completely for clean look */
     }
 
-    .small-sidebar .sidebar-menu li {
-        padding: 16px 7px;
+    /* Active State */
+    .sidebar-menu a.active li::before {
+        display: none;
     }
-    
-    .sidebar-menu li img {
-        width: 25px;
-        transition: 0.3s;
-        height: 25px;
+
+    .sidebar-menu a.active svg {
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 10px rgba(187, 134, 252, 0.5));
+        /* Purple glow */
     }
 }

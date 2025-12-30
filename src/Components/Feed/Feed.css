@@ -1,97 +1,125 @@
-.feed a{
-  text-decoration: none;
-  color: inherit;
-}
-
-.film-rate-fav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: -50px;
-    padding: 10px 10px 2px 10px;
+.feed {
+    background: transparent;
     width: 100%;
-    height: 50px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, white 100%);
-    border-bottom: 4px solid white;
     position: relative;
-    border: none;
+    transition: var(--transition);
 }
 
-.film-rate-fav .film-rate {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    width: fit-content;
-    background-color: #b0f7fa;
-    padding: 2px 10px;
-    border-radius: 25px;
-}
-
-.film-rate-fav .film-rate img {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-}
-
-.film-rate-fav .film-rate span {
-    font-size: 1.1em;
-    font-weight: 800;
-    margin-top: 1px;
-}
-
-.film-rate-fav .fav img {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-
-.dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, .3);
-    display: inline-block;
-    margin: 3px 6px;
-}
-
-.film-name {
-    font-size: 1.2em;
-    line-height: 1.3em;
-    margin: 0;
-    font-weight: 500;
-    margin-bottom: .5rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    white-space: nowrap;
+.film-poster {
+    position: relative;
+    border-radius: 20px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 150px;
-    display: block;
+    aspect-ratio: 2/3;
+    margin-bottom: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .film-poster-img {
-    width: 185px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
+    display: block;
+}
+
+.feed:hover .film-poster-img {
+    transform: scale(1.05);
+}
+
+/* Fav Overlay */
+.fav-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 35px;
+    height: 35px;
+    background: rgba(0, 0, 0, 0.6);
+    /* Darker glass matching navigation */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.fav-overlay:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.fav-overlay img {
+    width: 18px;
+    height: 18px;
+}
+
+/* Details below poster */
+.film-detail {
+    padding: 0 5px;
+}
+
+.feed a {
+    text-decoration: none;
+}
+
+.film-name {
+    color: white;
+    /* Clean white title */
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.film-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #ffd700;
+    /* Gold star */
+}
+
+.rating img {
+    width: 14px;
+    height: 14px;
+}
+
+.rating span {
+    color: #ccc;
+    font-weight: 600;
+}
+
+.year {
+    color: #666;
+    font-weight: 500;
 }
 
 @media only screen and (max-width: 768px) {
-    .feed   {
-        width: 40%;
-        display: flex;
-        gap: 10px;
+    .film-poster {
+        border-radius: 12px;
     }
 
-    .film-poster-img {  
-        cursor: pointer;
-        width: 100%;
+    .film-name {
+        font-size: 0.9rem;
+        /* Smaller text for mobile grid */
+        margin-bottom: 2px;
     }
-
-    .fd-infor{
-        margin-top: -6px;
-        font-size: 12px;
-    }
-    
 }

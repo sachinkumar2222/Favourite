@@ -2,143 +2,186 @@
     position: fixed;
     top: 0;
     width: 100%;
-    background-color: white;
+    height: var(--nav-height);
+    background-color: var(--surface-transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    /* Ensure flex layout is explicit */
+    align-items: center;
+    /* Center items vertically */
 }
 
 .navbar-shadow {
-    box-shadow: 0 5px 7px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
+/* ... */
 .logo-box {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 20px;
+    justify-content: flex-start;
+    gap: 15px;
+    height: 100%;
+    width: 250px;
+    padding-left: 20px;
 }
 
 .logo-box h1 {
-    font-size: 30px;
-    padding-top: 7px;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+    letter-spacing: 0.5px;
 }
 
 .logo-box img {
-    width: 35px;
+    width: 28px;
     cursor: pointer;
-    margin-left: -25px;
+    margin-left: 0;
+    filter: invert(1);
+    transition: var(--transition);
+}
+
+.logo-box img:hover {
+    transform: scale(1.1);
 }
 
 .search-box {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100%;
+    flex: 1;
 }
 
 .search {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
-    border: 1px solid black;
-    padding: 5px 10px;
-    border-radius: 25px;
-    width: 50%;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 8px 20px;
+    border-radius: 50px;
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: var(--transition);
+}
+
+.search:focus-within {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: var(--primary);
 }
 
 .search img {
-    width: 20px;
+    width: 18px;
     cursor: pointer;
+    filter: invert(1);
+    opacity: 0.7;
 }
 
 .search input {
     border: none;
     outline: none;
     background-color: transparent;
-    font-weight: 600;
+    color: var(--text-primary);
+    font-weight: 400;
+    width: 100%;
+    font-size: 0.95rem;
 }
 
+.search input::placeholder {
+    color: var(--text-secondary);
+}
+
+/* ... */
 .login-box {
     display: flex;
     align-items: center;
-    gap: 20px;
+    justify-content: flex-end;
+    /* Align to right */
+    gap: 25px;
+    height: 100%;
+    padding-right: 40px;
+    width: 250px;
+    /* Balanced width */
 }
 
 .login-box a {
     text-decoration: none;
-    color: black;
-    font-weight: bold;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: var(--transition);
 }
 
 .login-box a:hover {
-    color: rgb(67, 9, 102);
+    color: var(--primary);
 }
 
 .login-box img {
-    width: 30px;
+    width: 32px;
     cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    /* Prepare for hover border */
+    transition: var(--transition);
 }
 
+.login-box img:hover {
+    border-color: var(--primary);
+}
+
+/* Hide form-control1 if not used or style it */
 .form-control1 {
-    display: block;
-    width: 100%;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
+    /* Inherits from .search input now */
 }
 
 @media only screen and (max-width: 768px) {
-   
+    .navbar {
+        padding: 0 10px;
+        /* Overall padding */
+    }
+
     .logo-box {
-        padding-left: 30px;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
+        padding-left: 0;
+        gap: 0;
+        /* No gap needed if icon is hidden */
+        flex: 0 0 auto;
     }
 
     .logo-box h1 {
-        font-size: 20px;
-        padding-top: 5px;
+        display: block;
+        /* Show text as requested */
+        font-size: 1.2rem;
+        /* Reasonable mobile size */
+        margin-right: 10px;
     }
 
     .logo-box img {
-        width: 25px;
-        cursor: pointer;
-        margin-left: 0px;
+        display: none;
+        /* Hide menu icon as requested */
     }
 
     .search-box {
-        padding-left: 20px;
+        flex: 1;
+        /* Allow search to take available space */
+        padding: 0 10px 0 0;
+        /* Remove right padding since login box is gone */
     }
 
     .search {
-        width: 70%;
-        
-    }
-
-    .search img {
-        width: 20px;
-    }
-
-    .search input {
         width: 100%;
+        padding: 8px 15px;
+        max-width: 100%;
+        /* Ensure it fills container */
     }
 
     .login-box {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .login-box a {
         display: none;
-    }
-
-    .about-img {
-        display: block;
-    }
-
-    .login-box img {
-        width: 30px;
+        /* Hide profile/login box completely on mobile */
     }
 }

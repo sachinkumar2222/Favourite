@@ -1,85 +1,310 @@
-.home{
+.home {
     min-height: 100vh;
     width: 100%;
-    padding: 50px 0px 50px 0px ;
+    padding-top: calc(var(--nav-height) + 20px);
+    padding-bottom: 50px;
+    background-color: var(--background);
+    transition: var(--transition);
 }
 
-.home .big{
-    padding-left: 10%;
+/* --- Hero Slider --- */
+/* --- Hero Slider --- */
+.hero-slider-container {
+    width: calc(100% - 80px);
+    /* Match layout */
+    height: 450px;
+    margin: 0 auto 40px;
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    background: #000;
+    /* Fallback */
 }
 
-.home .small{
-    padding-left: 5%;
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center 20%;
+    /* Focus on upper 20% (faces) */
+    opacity: 0;
+    transition: opacity 1s ease-in-out, transform 6s ease-out;
+    z-index: 1;
+    transform: scale(1.05);
 }
 
-.home-content{
+.hero-slide.active {
+    opacity: 1;
+    z-index: 2;
+    transform: scale(1);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 70% 50%, transparent 10%, rgba(0, 0, 0, 0.6) 80%),
+        linear-gradient(to right, #050505 0%, rgba(5, 5, 5, 0.8) 40%, transparent 100%),
+        linear-gradient(to top, #050505 0%, transparent 50%);
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     justify-content: center;
+    padding: 0 60px;
 }
 
-.big .home-content{
-    gap: 20px;
-    padding: 5% 0 5% 5%;
+.hero-overlay h1 {
+    font-size: 4rem;
+    margin: 0 0 15px;
+    font-weight: 800;
+    max-width: 65%;
+    line-height: 1.1;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    letter-spacing: -1px;
 }
 
-.small .home-content{
-    gap: 10px;
-    padding: 5% 2% 5% 5%;
+.hero-overlay p {
+    font-size: 1.15rem;
+    color: #e0e0e0;
+    max-width: 50%;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
-.navigation{
+.hero-play-btn {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 30px;
+    border-radius: 30px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: max-content;
+    transition: all 0.3s ease;
+}
+
+.hero-play-btn:hover {
+    background: white;
+    color: black;
+}
+
+.hero-play-btn svg path {
+    transition: fill 0.3s;
+}
+
+.hero-play-btn:hover svg path {
+    fill: black;
+}
+
+/* Dots */
+.hero-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.hero-dots .dot {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hero-dots .dot.active {
+    background: white;
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* If needed to change internal SVG colors */
+
+/* --- Category Section --- */
+.category-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 40px;
+    padding: 0 40px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    /* Space for scrollbar if any */
+}
+
+/* Hide scrollbar */
+.category-section::-webkit-scrollbar {
+    display: none;
+}
+
+.category-pill {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    padding: 12px 30px;
+    border-radius: 12px;
+    color: #ccc;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.category-pill:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    color: white;
+}
+
+.section-title {
+    padding: 0 40px;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #ddd;
+    font-weight: 600;
+}
+
+/* --- Layout --- */
+/* Sidebar transition wrapper */
+.home>div {
+    transition: padding-left 0.3s ease;
+}
+
+.home .big {
+    padding-left: 280px;
+    /* Sidebar width + gap */
+}
+
+.home .small {
+    padding-left: 100px;
+    /* Collapsed sidebar width + gap, adjusted */
+}
+
+.home-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    /* Slightly wider cards */
+    gap: 40px 24px;
+    /* More vertical gap for text */
+    padding: 0 40px;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 60px;
     width: 100%;
 }
 
-.big .navigation{
-    padding: 30px 15%;
+.navigation div {
+    /* Neon Gradient Background */
+    background: linear-gradient(135deg, #42e695 0%, #3bb2b8 100%);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(66, 230, 149, 0.4);
 }
 
-.small .navigation{
-    padding: 30px 8%;
-    
+/* Specific styling if we want distinct colors, but shared gradient is fine/cleaner */
+
+.navigation div:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(66, 230, 149, 0.6);
 }
-.navigation img{
-    width: 50px;
-    cursor: pointer;
-    border-radius: 50%;
+
+.navigation div svg {
+    width: 28px;
+    height: 28px;
+    stroke: black;
+    /* Force black stroke */
+    transition: transform 0.3s ease;
+}
+
+.navigation div:hover svg {
+    transform: scale(1.1);
+}
+
+.navigation div:active {
+    transform: scale(0.9);
+}
+
+
+@media only screen and (max-width: 992px) {
+    .home .big {
+        padding-left: 100px;
+        /* Force overflow or adapt */
+    }
 }
 
 @media only screen and (max-width: 768px) {
-    .home{
-        padding: 70px 0px 50px 0px ;
+    .home {
+        padding-top: calc(var(--nav-height) + 10px);
+        padding-bottom: 100px;
+        /* Space for Bottom Bar */
     }
 
-    .home .big{
-        padding-left: 5%;
-    }
-    
-    .home .small{
-        padding-left: 5%;
+    /* Reset padding as sidebar might change behavior or be hidden/overlay */
+    .home .big,
+    .home .small {
+        padding-left: 0;
     }
 
-    .big .home-content{
-        column-gap: 30px;
-        row-gap: 15px;
-        padding: 5%;
+    .hero-section {
+        width: calc(100% - 40px);
+        margin: 0 20px 30px;
+        height: 300px;
     }
 
-    .small .home-content {
-        column-gap: 30px;
-        row-gap: 15px;
-        padding: 5%;
+    .hero-overlay {
+        padding: 0 20px;
     }
 
-    .small .navigation{
-        padding: 30px 20% 0px 20%;
-        
+    .hero-overlay h1 {
+        font-size: 2rem;
+        max-width: 100%;
     }
-    .navigation img{
-        width: 40px;
-        cursor: pointer;
+
+    .hero-overlay p {
+        max-width: 100%;
+        font-size: 0.9rem;
+    }
+
+    .category-section,
+    .section-title,
+    .home-content {
+        padding: 0 20px;
+    }
+
+    .home-content {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 16px;
     }
 }

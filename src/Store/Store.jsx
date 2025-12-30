@@ -4,7 +4,11 @@ export const States = createContext();
 
 const ContextProvider = ({ children }) => {
   const [smallSidebar, setSmallSidebar] = useState(true);
-  const [favourite, setFavourite] = useState({});
+  const [favourite, setFavourite] = useState([]); // Initialize as Array
+
+  // ...
+
+
   const [apiData, setApiData] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -13,7 +17,7 @@ const ContextProvider = ({ children }) => {
   const [searchInput, setSearchInput] = useState("");
 
   const sData = async (searchTerm) => {
-    setIsLoading(true);
+    // setIsLoading(true); // Don't block UI for search suggestions
     try {
       const movieResponse = await fetch(
         `https://api.themoviedb.org/3/search/movie?api_key=c21b18d183786cd4be5c3a6f768b1d95&query=${searchTerm}&page=${page}`
@@ -25,18 +29,21 @@ const ContextProvider = ({ children }) => {
       );
       const tvData = await tvResponse.json();
 
-      const combinedResults = [...(movieData.results || []), ...(tvData.results || [])];
+      const movies = (movieData.results || []).map((item) => ({ ...item, media_type: 'movie' }));
+      const tvs = (tvData.results || []).map((item) => ({ ...item, media_type: 'tv' }));
+
+      const combinedResults = [...movies, ...tvs];
 
       if (combinedResults.length > 0) {
-        setSearchResults(combinedResults); 
+        setSearchResults(combinedResults);
       } else {
-        setSearchResults([]); 
+        setSearchResults([]);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      setSearchResults([]); 
+      setSearchResults([]);
     } finally {
-      setIsLoading(false); 
+      // setIsLoading(false);
     }
   };
 
@@ -56,7 +63,10 @@ const ContextProvider = ({ children }) => {
       );
       const tvData = await tvResponse.json();
 
-      const combinedResults = [...(movieData.results || []), ...(tvData.results || [])];
+      const movies = (movieData.results || []).map((item) => ({ ...item, media_type: 'movie' }));
+      const tvs = (tvData.results || []).map((item) => ({ ...item, media_type: 'tv' }));
+
+      const combinedResults = [...movies, ...tvs];
 
       if (combinedResults.length > 0) {
         setApiData(combinedResults); // Set both popular movies and TV shows
@@ -78,14 +88,51 @@ const ContextProvider = ({ children }) => {
   // Toggle favorite for movies/TV shows
   const toggleFavourite = (itemId, movieData) => {
     setFavourite((prevFavourites) => {
-      const updatedFavourites = { ...prevFavourites };
-      if (updatedFavourites[itemId]) {
-        delete updatedFavourites[itemId];
+      // Check if item exists in array
+      const isPresent = prevFavourites.some(item => item.id === itemId);
+
+      if (isPresent) {
+        // Remove item
+        return prevFavourites.filter(item => item.id !== itemId);
       } else {
-        updatedFavourites[itemId] = movieData;
+        // Add item
+        return [...prevFavourites, movieData];
       }
-      return updatedFavourites;
     });
+  };
+
+  // Fetch by Genre
+  const fetchByGenre = async (genreId) => {
+    setIsLoading(true);
+    setApiData([]); // Clear previous data
+    try {
+      // 1. Fetch Movies by Genre
+      const movieResponse = await fetch(
+        `https://api.themoviedb.org/3/discover/movie?api_key=c21b18d183786cd4be5c3a6f768b1d95&with_genres=${genreId}&page=${page}`
+      );
+      const movieData = await movieResponse.json();
+
+      // 2. Fetch TV Shows by Genre
+      const tvResponse = await fetch(
+        `https://api.themoviedb.org/3/discover/tv?api_key=c21b18d183786cd4be5c3a6f768b1d95&with_genres=${genreId}&page=${page}`
+      );
+      const tvData = await tvResponse.json();
+
+      const movies = (movieData.results || []).map((item) => ({ ...item, media_type: 'movie' }));
+      const tvs = (tvData.results || []).map((item) => ({ ...item, media_type: 'tv' }));
+
+      const combinedResults = [...movies, ...tvs];
+
+      // Sort by popularity or vote_average to mix them well? 
+      // For now, just interleave or concat. Random sort is fun but unpredictable.
+      // Let's just concat for stability.
+      setApiData(combinedResults);
+
+    } catch (error) {
+      console.error("Error fetching genre:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -104,6 +151,8 @@ const ContextProvider = ({ children }) => {
         setPage,
         page,
         sData,
+        fData, // Expose original fetch for "Trending"
+        fetchByGenre, // Expose new genre fetch
         searchInput,
         setSearchInput,
       }}
